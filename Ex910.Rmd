@@ -1,0 +1,51 @@
+---
+title: "Ex9.10"
+author: "Aldair Perez"
+date: "2025-03-03"
+format: html
+execute:
+  echo: true
+---
+
+```{r}
+cleaned_data <- na.omit(airquality)
+# The data needs to be cleaned because there are some responses with NA.
+```
+
+```{r}
+lm_model <- lm(Ozone ~ Solar.R, data = cleaned_data)
+summary(lm_model)
+plot(cleaned_data$Solar.R, cleaned_data$Ozone,
+      xlab = "Solar Radiation", ylab = "Ozone",
+      main = "Ozone vs solar Radiation")
+  abline(lm_model, col = "blue") 
+# I chose the variable because Solar.R has a relationship with ozone, there's some correlation, and interpret in environmental science.
+
+```
+
+```{r}
+summary(lm_model)
+# This model is not very valid because of the plots not being strongly correlated between radiation and ozone.
+```
+
+```{r}
+# While the multiple R-squared is .1213, the adjusted R-squared is .1133.
+```
+
+```{r}
+augmented_data <- augment(lm_model, cleaned_data)
+head(augmented_data)
+```
+
+```(r)
+ggplot(augmented_data, aes(x = Ozone, y = .fitted)) +
+     geom_point(color = "blue") +
+     geom_abline(intercept = 0, slope = 1, color = "red") +
+     labs(
+         x = "Actual Ozone", 
+         y = "Predicted Ozone",
+         title = "Actual vs Predicted Ozone",
+         subtitle = paste("Correlation:", round(cor(augmented_data$Ozone, augmented_data$.fitted), 2))
+     ) +
+     theme_minimal() 
+```
