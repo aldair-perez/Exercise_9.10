@@ -1,0 +1,61 @@
+---
+title: "Exercise910"
+author: "Aldair Perez"
+date: "03-21-2025"
+format: html
+execute: 
+  echo: true
+---
+
+```{r}
+library(tidyr)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(broom)
+```
+
+# Question 2
+```{r}
+view(airquality)
+cleaned_data <- na.omit(airquality)
+```
+
+# Quesiton 3
+```{r}
+lm_model <- lm(Ozone ~ Solar.R, data = cleaned_data)
+ summary(lm_model)
+```
+
+# Question 4
+```{r}
+plot(cleaned_data$Solar.R, cleaned_data$Ozone,
+       xlab = "Solar Radiation", ylab = "Ozone",
+       main = "Ozone vs solar Radiation")
+   abline(lm_model, col = "blue")
+ summary(lm_model)
+```
+
+# Quesiton 5
+While the mutliple R-squared is 0.1213, the adjusted R-squared is 0.1133.
+
+# Question 6
+```{r}
+augmented_data <- augment(lm_model, cleaned_data)
+ head(augmented_data)
+```
+
+# Question 7
+```{r}
+ggplot(augmented_data, aes(x = Ozone, y = .fitted)) +
+      geom_point(color = "blue") +
+      geom_abline(intercept = 0, slope = 1, color = "red") +
+      labs(
+          x = "Actual Ozone", 
+          y = "Predicted Ozone",
+          title = "Actual vs Predicted Ozone",
+          subtitle = paste("Correlation:", round(cor(augmented_data$Ozone, augmented_data$.fitted), 2))
+      ) +
+      theme_minimal()
+```
+
